@@ -5,6 +5,7 @@ from sys import stdout
 from os import _exit
 from atexit import register
 from threading import Thread
+from socket import error
 import api.moubot
 import api.functions
 
@@ -26,9 +27,11 @@ def ircloop():
 	while (True):
 		try:
 			bot.get()
-		except socket.error:
+			message = bot.get_message()
+		except error:
 			return 1
-		message = bot.get_message()
+		if bot.data == '':
+			return 1
 		api.functions.printc("\r<%s> %s\n" % (message[0], message[1]), "blue")
 		api.functions.printc("command~> ", "red")
 		stdout.flush()
@@ -62,7 +65,7 @@ def main():
 
 			elif (command == 'help'):
 				help(api.moubot.moubot)
-				print("Example:\nserver&irc.server.com\njoin&#channel\nsay&hi")
+				print("Example:\nserver&irc.server.com\njoin&#channel\nsay&hi\n&reset&nick nickname")
 
 			else:
 				print("[*] command not found try 'help'")
