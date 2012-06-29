@@ -65,7 +65,7 @@ def main():
 
 			elif (command == 'help'):
 				help(api.moubot.moubot)
-				print("Example:\nserver&irc.server.com\njoin&#channel\nsay&hi\n&reset&nick nickname")
+				print("Example:\nserver&irc.server.com\njoin&#channel\nsay&hi\nreset\nnick&nickname")
 
 			else:
 				print("[*] command not found try 'help'")
