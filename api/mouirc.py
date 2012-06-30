@@ -44,5 +44,5 @@ def nick(irc, nick):
 def join(irc, channel):
 	irc.send('JOIN %s\r\n' % channel)
 
-def send_message(irc, message_to_send, channel):
-	irc.send('PRIVMSG %s :%s\r\n' % (channel, message_to_send))
+def msg(irc, who, message):
+	irc.send("PRIVMSG %s :%s\r\n" % (who, message))
