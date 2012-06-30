@@ -9,7 +9,7 @@ class moubot:
 		self.connecte = False
 		self.muted = False
 		self.actives_channels = []
-		self.nick = "moubot"
+		self.xnick = "moubot"
 
 	def __del__(self):
 		self.irc.close()
@@ -20,7 +20,7 @@ class moubot:
 		try:
 			self.irc.connect((address, int(port)))
 			self.connecte = True
-			nick(self.irc, self.nick)
+			nick(self.irc, self.xnick)
 			send_raw(self.irc, 'USER MOU raps mouu :Python IRC bot\r\n')
 		except (error):
 			self.connecte = False
@@ -51,6 +51,10 @@ class moubot:
 		'''cycle a channel'''
 		self.part(channel)
 		self.join(channel)
+	
+	def msg(self, to, message):
+		'''send a message'''
+		msg(self.irc, to, message)
 
 	def join(self, channel):
 		'''join a channel, it will focus on it if you already joinned it'''
@@ -65,18 +69,18 @@ class moubot:
 			part(self.irc, channel)
 			self.actives_channels.remove(channel)
 		if channel == self.focused_channel:
-			sef.focused_channel = ''
+			self.focused_channel = ''
 
 	def reply(self, message):
 		'''just reply a message'''
 		if not self.muted:
-			send_message(self.irc, message, catch_channel_by_message(self.data))
+			msg(self.irc, catch_channel_by_message(self.data), message)
 
 	def say(self, message_to_send):
 		'''Send a message to the focused channel
 		tips: to focus a channel just join one'''
 		if not self.muted:
-			send_message(self.irc, message_to_send, self.focused_channel)
+			msg(self.irc, self.focused_channel, message_to_send)
 	
 	def mute(self):
 		'''mute the bot'''
@@ -86,27 +90,27 @@ class moubot:
 		'''unmute the bot'''
 		self.muted = False
 
-	def nick(self, nick):
+	def nick(self, xnick):
 		'''Change nickname'''
-		self.nick = nick
-		nick(self.irc, nick)
-	
+		self.xnick = xnick
+		nick(self.irc, self.xnick)
+
 	def raw(self, raw):
 		'''send raw data to the server'''
 		send_raw(self.irc, raw)
-	
+
 	def topic(self, topic, channel=''):
 		'''set topic'''
 		if channel == '':
 			channel = self.focused_channel
 		topic(self.irc, topic, channel)
-		
+
 	def kick(self, nick, why='stfu', channel=''):
 		'''kick somebody'''
 		if channel == '':
 			channel = self.focused_channel
 		kick(self.irc, nick, channel, why)
-	
+
 	def mode(self, mode, channel='', nick=''):
 		'''set channel and users modes'''
 		if channel == '':
@@ -115,6 +119,9 @@ class moubot:
 			nick = ' '+nick
 		mode(self.irc, mode, channel, nick)
 	
+	def get_channel(self):
+		return catch_channel_by_message(self.data)
+
 	def get_nick(self):
 		'''returns the nick of the message'''
 		return get_nick(self.data)
