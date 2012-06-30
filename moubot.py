@@ -6,17 +6,31 @@ from os import _exit
 from atexit import register
 from threading import Thread
 from socket import error
+from platform import system
 import api.moubot
 import api.functions
 
+def printc(text, color='default'):
+	'''output with colors'''
+	colortable = {
+		'black':		'0;30',		'bright gray':	'0;37',
+		'blue':			'1;34',		'white':		'1;37',
+		'green':		'1;32',		'red':			'1;31',
+		'purple':		'1;35',		'yellow':		'0;33',
+		'default':		'0'}
+	if system != 'Windows':
+		stdout.write("\033[%sm%s\033[0m" % (colortable[color], text))
+	else:
+		stdout.write(text)#I didn't implemented windows terminal colors for windows sorry
+
 def clean_exit():
 	'''just close the socket and kill threads before quitting'''
-	api.functions.printc("\n[*] quitting\n", "purple")
+	printc("\n[*] quitting\n", "purple")
 	try:
 		del bot
 	except NameError:
 		pass
-	api.functions.printc("Done!\n")
+	printc("Done!\n")
 	_exit(0)
 
 
@@ -32,8 +46,8 @@ def ircloop():
 			return 1
 		if bot.data == '':
 			return 1
-		api.functions.printc("\r<%s> %s\n" % (message[0], message[1]), "blue")
-		api.functions.printc("command~> ", "red")
+		printc("\r%s <%s> %s\n" % (bot.get_channel(), message[0], message[1]), "blue")
+		printc("command~> ", "red")
 		stdout.flush()
 		#here you can launch bot functions
 		api.functions.basic_options(bot)
@@ -47,7 +61,7 @@ def main():
 
 	while True:
 		try:
-			api.functions.printc("command~> ", "red")
+			printc("command~> ", "red")
 			command = raw_input()
 		except (KeyboardInterrupt, EOFError):
 			clean_exit()
@@ -55,7 +69,7 @@ def main():
 		try:
 			com = command.split("&")
 			print(getattr(bot, com[0])(*com[1:]))
-		except (AttributeError, TypeError):
+		except (AttributeError, TypeError, error):
 			if (command == 'exit'):
 				clean_exit()
 
@@ -68,9 +82,12 @@ def main():
 				print("Example:\nserver&irc.server.com\njoin&#channel\nsay&hi\nreset\nnick&nickname")
 
 			else:
-				print("[*] command not found try 'help'")
+				if (hasattr(bot, com[0])):
+					printc("More arguments needed.\n", "blue")
+				else:
+					printc("[*] command not found try 'help'\n", "blue")
 	return 0
 
 if __name__ == '__main__':
-	api.functions.printc("MOUBOT & MOUCLIENT VERSION BETA 1.0\ntype help for help :)\n%s\n" % ("-"*50), "green")
+	printc("MOUBOT & MOUCLIENT VERSION BETA 1.0\ntype help for help :)\n%s\n" % ("-"*50), "green")
 	main()
