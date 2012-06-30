@@ -16,16 +16,3 @@ def basic_options(bot):
 			bot.reply("Error")
 	else:
 		pass
-
-def printc(text, color='default'):
-	'''output with colors'''
-	colortable = {
-		'black':		'0;30',		'bright gray':	'0;37',
-		'blue':			'1;34',		'white':		'1;37',
-		'green':		'1;32',		'red':			'1;31',
-		'purple':		'1;35',		'yellow':		'0;33',
-		'default':		'0'}
-	if system != 'Windows':
-		stdout.write("\033[%sm%s\033[0m" % (colortable[color], text))
-	else:
-		stdout.write(text)#I didn't implemented windows terminal colors for windows sorry
