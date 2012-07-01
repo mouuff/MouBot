@@ -47,7 +47,7 @@ def ircloop():
 		if bot.data == '':
 			return 1
 		printc("\r%s <%s> %s\n" % (bot.get_channel(), message[0], message[1]), "blue")
-		printc("command~> ", "red")
+		printc("~> ", "red")
 		stdout.flush()
 		#here you can launch bot functions
 		api.functions.basic_options(bot)
@@ -61,7 +61,7 @@ def main():
 
 	while True:
 		try:
-			printc("command~> ", "red")
+			printc("~> ", "red")
 			command = raw_input()
 		except (KeyboardInterrupt, EOFError):
 			clean_exit()
@@ -85,7 +85,10 @@ def main():
 				if (hasattr(bot, com[0])):
 					printc("More arguments needed.\n", "blue")
 				else:
-					printc("[*] command not found try 'help'\n", "blue")
+                                                                      try:    
+                                                                                  bot.say(command)
+                                                                      except error:
+                                                                                    printc("Connect yourself to a server or a channel, type help for help\n")
 	return 0
 
 if __name__ == '__main__':
