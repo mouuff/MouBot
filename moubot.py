@@ -85,10 +85,10 @@ def main():
 				if (hasattr(bot, com[0])):
 					printc("More arguments needed.\n", "blue")
 				else:
-                                                                      try:    
-                                                                                  bot.say(command)
-                                                                      except error:
-                                                                                    printc("Connect yourself to a server or a channel, type help for help\n")
+					try:    
+						bot.say(command)
+					except error:
+						printc("Connect yourself to a server or a channel, type help for help\n")
 	return 0
 
 if __name__ == '__main__':
