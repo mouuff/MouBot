@@ -16,12 +16,16 @@ def printc(text, color='default'):
 		'black':		'0;30',		'bright gray':	'0;37',
 		'blue':			'1;34',		'white':		'1;37',
 		'green':		'1;32',		'red':			'1;31',
-		'purple':		'1;35',		'yellow':		'0;33',
+		'purple':		'1;35',		'yellow':		'1;33',
 		'default':		'0'}
-	if (system() != 'Windows'):
-		stdout.write("\033[%sm%s\033[0m" % (colortable[color], text))
-	else:
-		stdout.write(text)#I didn't implemented windows terminal colors for windows sorry
+	try:
+		if system != 'Windows':
+			stdout.write("\033[%sm%s\033[0m" % (colortable[color], text))
+		else:
+			stdout.write(text)#I didn't implemented windows terminal colors for windows sorry
+	except KeyError:
+		stdout.write(text)
+
 
 def clean_exit():
 	'''just close the socket and kill threads before quitting'''
@@ -46,7 +50,11 @@ def ircloop():
 			return 1
 		if bot.data == '':
 			return 1
-		printc("\r%s <%s> %s\n" % (bot.get_channel(), message[0], message[1]), "blue")
+		if (bot.xnick in bot.data):
+			output_color = "yellow"
+		else:
+			output_color = "blue"
+		printc("\r%s <%s> %s\n" % (bot.get_channel(), message[0], message[1]), output_color)
 		printc("~> ", "red")
 		stdout.flush()
 		#here you can launch bot functions
