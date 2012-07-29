@@ -19,7 +19,7 @@ def printc(text, color='default'):
 		'purple':		'1;35',		'yellow':		'1;33',
 		'default':		'0'}
 	try:
-		if system != 'Windows':
+		if system() != 'Windows':
 			stdout.write("\033[%sm%s\033[0m" % (colortable[color], text))
 		else:
 			stdout.write(text)#I didn't implemented windows terminal colors for windows sorry
